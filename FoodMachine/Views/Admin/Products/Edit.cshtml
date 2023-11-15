@@ -1,0 +1,38 @@
+﻿﻿@using Food.Dal.Models.Admin;
+@model ProductViewModel;
+
+
+@{
+    Layout = "~/Views/SharedAdmin/_AdminLayout.cshtml";
+}
+<form method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-sm-4">
+            <div>
+                Product Name: <input type="text" name="Name" value="@Model.Name" class="form-control"/>
+            </div>
+            <div>
+                Description: <input type="text" name="Description" value="@Model.Description" class="form-control"/>
+            </div>
+            <div>
+                Quantity: <input type="number" name="Quantity" value="@Model.Quantity" class="form-control"/>
+            
+            </div>
+            <div>
+                Price: <input type="number" name="Price" value="@Model.Price" class="form-control"/>
+            </div>
+
+             <div>
+                Main Image:
+                <input type="file" name="MainImageFile" />
+            </div>
+            
+
+        </div>
+        <div class="col-sm-12">
+            <button class="btn btn-info">Save</button>
+        </div>
+
+    </div>
+</form>
+
