@@ -1,4 +1,5 @@
 ﻿using Food.Dal.Models.Admin;
+using Food.Dal.Models.Payment;
 using Food.Dal.Services;
 using Food.Database;
 using Food.Database.Models;
@@ -26,7 +27,7 @@ namespace FoodMachine.Controllers.Payment
 
         public async Task<IActionResult> Index()
         {
-           
+            int shipping = 20;
             List<Product> w = new List<Product>();
             List<Product> pro = _context.CartItems.Select(x => new Product
             {
@@ -39,17 +40,19 @@ namespace FoodMachine.Controllers.Payment
             }
             var model = new ProductEditViewModel();
             model.Products = new List<ProductCreateModel>();
+            
 
             foreach (var item in w)
             {
-
+                decimal all = shipping + item.Price;
                 ProductCreateModel t = new ProductCreateModel()
                 {
                     Id = item.Id,
                     Name = item.Name,
                     MainImages = item.MainImage,
                     Price = item.Price,
-                    Total = item.Price
+                    Total = item.Price,
+                    ShippingPrice=shipping
                 };
 
                // DateTime startTime = DateTime.Now;
@@ -63,8 +66,15 @@ namespace FoodMachine.Controllers.Payment
             return View("~/Views/Payment/Cart.cshtml", model);
         }
         [Route("/Payment/Cart/time")]
-        public IActionResult Time()
+        public IActionResult Time( CartViewModel model)
         {
+            var bas = cartService.GetAll().ToList(); 
+            
+            foreach (var item in bas)
+            {
+                
+            }
+
             DateTime currentTime = DateTime.Now;
             Console.WriteLine($"Current Time: {currentTime}");
             Console.WriteLine("30 minutes have passed!");
@@ -137,6 +147,13 @@ namespace FoodMachine.Controllers.Payment
             cartService.AddProduct(cartItem);
             return Redirect("/");
 
+        }
+        [HttpGet]
+        [Route("/Payment/Cart/Delete/{id}")]
+        public IActionResult Delete(int id)
+        {
+          cartService.Delete(id);
+            return Redirect("/Admin/Products");
         }
     }
 

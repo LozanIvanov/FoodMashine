@@ -28,6 +28,7 @@ namespace Food.Dal.Models.Admin
 
         public int TotalPages { get; set; }
         public int CurrentPage { get; set; }
+        public decimal ShippingPrice { get; set; }
 
         public ProductViewModel()
         {

@@ -30,6 +30,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CartService>();
+builder.Services.AddScoped<CheckoutService>();
+builder.Services.AddScoped<ReservationService>();
 
 var app = builder.Build();
 

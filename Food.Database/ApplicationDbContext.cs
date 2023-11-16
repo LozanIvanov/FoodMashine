@@ -15,6 +15,8 @@ namespace Food.Database
 
         public DbSet<Cart> CartItems { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Checkout> Checkouts {get;set;}
+        public DbSet<Reservation> Reservations { get; set; }    
         public ApplicationDbContext(DbContextOptions options)
           : base(options)
         {

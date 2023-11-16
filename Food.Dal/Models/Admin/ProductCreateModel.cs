@@ -20,10 +20,12 @@ namespace Food.Dal.Models.Admin
         public IFormFile? MainImage { get; set; }
         public string? MainImages { get; set; }
         public string? GalleryImage { get; set; }
+        public decimal? ChippingPrice { get; set; }
       
         public int Code { get; set; }
         public long TimeUnix { get; set; }
 
         public decimal Total { get; set; }
+        public decimal ShippingPrice { get; set; }
     }
 }
