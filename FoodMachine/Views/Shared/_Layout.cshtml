@@ -83,8 +83,10 @@
                 </a>
                 <a href="/Payment/Cart" class="btn border">
                     <i class="fas fa-shopping-cart text-primary"></i>
-                    <span class="badge">0</span>
+                    <span class="badge" id="cart-badge">0</span>
                 </a>
+
+
             </div>
         </div>
     </div>
@@ -98,7 +100,7 @@
                     <i class="fa fa-angle-down text-dark"></i>
                 </a>
                 <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light" id="navbar-vertical" style="width: calc(100% - 30px); z-index: 1;">
-                    <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
+                    <div class="navbar-nav w-100 overflow-hidden" style="">
                        
                         <a href="" class="nav-item nav-link">China Food</a>
                         <a href="" class="nav-item nav-link">Europe Food</a>
@@ -247,6 +249,39 @@
 
     <!-- Template Javascript -->
     <script src="/js/main.js"></script>
+    <script>
+        // Update cart badge
+        function updateCartCount() {
+            const badge = document.getElementById('cart-badge');
+            if (!badge) return;
+
+            fetch('/api/cart/count')
+                .then(response => response.json())
+                .then(data => {
+                    badge.innerText = data?.count ?? 0;
+                })
+                .catch(err => {
+                    console.error('Cart count error:', err);
+                    badge.innerText = 0;
+                });
+        }
+
+        // Add product to cart
+        function addToCart(productId) {
+            fetch(`/api/cart/add/${productId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    const badge = document.getElementById('cart-badge');
+                    if (badge) badge.innerText = data?.count ?? 0;
+                })
+                .catch(err => console.error('Add to cart error:', err));
+        }
+
+        // Call on page load
+        document.addEventListener('DOMContentLoaded', updateCartCount);
+    </script>
+
+
 </body>
 
 </html>

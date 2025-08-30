@@ -13,6 +13,28 @@
 
         document.getElementById("shop-form").submit();
     }
+     function updateCartCount() {
+        fetch('/api/cart/count')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('cart-badge').innerText = data.count;
+            })
+            .catch(err => console.error(err));
+    }
+
+    // Add product to cart
+    function addToCart(productId) {
+        fetch(`/api/cart/add/${productId}`, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                // Update badge immediately
+                document.getElementById('cart-badge').innerText = data.count;
+            })
+            .catch(err => console.error(err));
+    }
+
+    // Call once on page load
+    updateCartCount();
 </script>
 
 <!-- Shop Start -->
@@ -64,31 +86,31 @@
             <!-- Price End -->
             <!-- Color Start -->
             <div class="border-bottom mb-4 pb-4">
-                <h5 class="font-weight-semi-bold mb-4">Filter by color</h5>
+                <h5 class="font-weight-semi-bold mb-4">Filter by category</h5>
                 <form>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input" checked id="color-all">
-                        <label class="custom-control-label" for="price-all">All Color</label>
+                        <label class="custom-control-label" for="price-all">All category</label>
                         <span class="badge border font-weight-normal">1000</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input" id="color-1">
-                        <label class="custom-control-label" for="color-1">Black</label>
+                        <label class="custom-control-label" for="color-1">Soup</label>
                         <span class="badge border font-weight-normal">150</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input" id="color-2">
-                        <label class="custom-control-label" for="color-2">White</label>
+                        <label class="custom-control-label" for="color-2">Salad</label>
                         <span class="badge border font-weight-normal">295</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input" id="color-3">
-                        <label class="custom-control-label" for="color-3">Red</label>
+                        <label class="custom-control-label" for="color-3">Fish</label>
                         <span class="badge border font-weight-normal">246</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input" id="color-4">
-                        <label class="custom-control-label" for="color-4">Blue</label>
+                        <label class="custom-control-label" for="color-4">Desert</label>
                         <span class="badge border font-weight-normal">145</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
@@ -182,32 +204,46 @@
                             </div>
                             <div class="card-footer d-flex justify-content-between bg-light border">
                                 <a href="/shop/details/@product.Id" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                                <a href="@Url.Action("Create","Cart",new { Id=@product.Id})" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
+                                <a href="javascript:void(0)" onclick="addToCart(@product.Id)" class="btn btn-sm text-dark p-0">
+                                    <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
+                                </a>
+
+
                             </div>
                         </div>
                     </div>
                 }
                 <!-- Products List End -->
-                <div>
 
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    @for (int i = 1; i <= Model.TotalPages; i++)
-                    {
-
-                        <a @(i == Model.CurrentPage ? "style=color:red;":"") href="/Home?page=@i">@i</a>
-
-                    }
-                    <a class="page-link" href="/Admin/Products?page=i" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                        <span class="sr-only">Next</span>
-                    </a>
-                </div>
             </div>
         </div>
         <!-- Shop Product End -->
+        <div class="d-flex justify-content-center my-4" style="width:100%">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" href="/Admin/Products?page=@(Model.CurrentPage - 1)" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", "Home", new { page = i })">@i</a>
+                        </li>
+                    }
+
+                    <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link" href="/Admin/Products?page=@(Model.CurrentPage + 1)" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
 </div>
 <!-- Shop End -->

@@ -18,6 +18,7 @@ namespace Food.Dal.Models.Admin
 
         public int Quantity { get; set; }
 
+
         public decimal Price { get; set; }
         public string? MainImage { get; set; }
         public string? GalleryImage { get; set; }

@@ -29,7 +29,17 @@ namespace Food.Dal.Services
         public void AddProduct(Cart product)
         {
             
-            dbContext.CartItems.Add(product);
+            var existing = dbContext.CartItems.FirstOrDefault(c => c.ProductId == product.ProductId);
+            if (existing != null)
+            {
+                existing.Quantity += product.Quantity; // increase quantity
+                dbContext.CartItems.Update(existing);
+            }
+            else
+            {
+                dbContext.CartItems.Add(product); // add new if not exists
+            }
+
             dbContext.SaveChanges();
 
         }
@@ -42,6 +52,10 @@ namespace Food.Dal.Services
                 .FirstOrDefault();
             dbContext.Entry(cat).State = EntityState.Deleted;
             dbContext.SaveChanges();
+        }
+        public int GetCartCount()
+        {
+            return dbContext.CartItems.Sum(c => c.Quantity);
         }
     }
 }

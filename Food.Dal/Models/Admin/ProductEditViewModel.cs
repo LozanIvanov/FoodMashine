@@ -13,5 +13,7 @@ namespace Food.Dal.Models.Admin
         
       
         public List<ProductCreateModel> Products { get; set; }
+        public decimal Shipping { get; set; } // 👈 add this
     }
+
 }

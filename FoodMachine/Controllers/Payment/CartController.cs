@@ -3,6 +3,7 @@ using Food.Dal.Models.Payment;
 using Food.Dal.Services;
 using Food.Database;
 using Food.Database.Models;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodMachine.Controllers.Payment
@@ -27,52 +28,49 @@ namespace FoodMachine.Controllers.Payment
 
         public async Task<IActionResult> Index()
         {
-            int shipping = 20;
-            List<Product> w = new List<Product>();
-            List<Product> pro = _context.CartItems.Select(x => new Product
-            {
-                Id = x.ProductId
-            }).ToList();
-            foreach (var pr in pro)
-            {
-                Product product = _context.Products.Where(x => x.Id == pr.Id).FirstOrDefault();
-                w.Add(product);
-            }
+
+            int shipping = 10;
+
+            var cartItems = _context.CartItems.ToList();
             var model = new ProductEditViewModel();
             model.Products = new List<ProductCreateModel>();
-            
+            model.Shipping = 10;
 
-            foreach (var item in w)
+            foreach (var cartItem in cartItems)
             {
-                decimal all = shipping + item.Price;
+                var product = _context.Products.FirstOrDefault(x => x.Id == cartItem.ProductId);
+                if (product == null) continue;
+
                 ProductCreateModel t = new ProductCreateModel()
                 {
-                    Id = item.Id,
-                    Name = item.Name,
-                    MainImages = item.MainImage,
-                    Price = item.Price,
-                    Total = item.Price,
-                    ShippingPrice=shipping
+                    Id = product.Id,
+                    Name = product.Name,
+                    MainImages = product.MainImage,
+                    Price = product.Price,
+                    Quantity = cartItem.Quantity, // 👈 use quantity from Cart
+                    Total = product.Price * cartItem.Quantity, // 👈 Price × Quantity
+                   
                 };
-
-               // DateTime startTime = DateTime.Now;
-               // DateTime duration = startTime.AddMinutes(30);
-               // long unix = ((DateTimeOffset)duration).ToUnixTimeSeconds();
-               // t.TimeUnix = unix;//todo da promenj da pokazwa ot cart table;
+                ViewBag.Shipping = shipping; 
                 model.Products.Add(t);
+                // DateTime startTime = DateTime.Now;
+                // DateTime duration = startTime.AddMinutes(30);
+                // long unix = ((DateTimeOffset)duration).ToUnixTimeSeconds();
+                // t.TimeUnix = unix;//todo da promenj da pokazwa ot cart table;
+
 
             }
 
             return View("~/Views/Payment/Cart.cshtml", model);
         }
         [Route("/Payment/Cart/time")]
-        public IActionResult Time( CartViewModel model)
+        public IActionResult Time(CartViewModel model)
         {
-            var bas = cartService.GetAll().ToList(); 
-            
+            var bas = cartService.GetAll().ToList();
+
             foreach (var item in bas)
             {
-                
+
             }
 
             DateTime currentTime = DateTime.Now;
@@ -129,22 +127,21 @@ namespace FoodMachine.Controllers.Payment
             //}
 
             //return View("~/Views/Payment/Cart.cshtml");
-            return View ("~/Views/Admin/Products/Index.cshtml");
+            return View("~/Views/Admin/Products/Index.cshtml");
         }
         [HttpGet]
         [Route("Payment/Cart/Create/{id}")]
-        public IActionResult Create( int id )
+        public IActionResult Create(int id)
         {
-            var p = productService.GetProductById(id);
-
-            Cart cartItem = new Cart()
+            var product = productService.GetProductById(id);
+            if (product != null)
             {
-                ProductId = p.Id,
-                Quantity = 1,              
-
-            };
-            
-            cartService.AddProduct(cartItem);
+                cartService.AddProduct(new Cart
+                {
+                    ProductId = product.Id,
+                    Quantity = 1
+                });
+            }
             return Redirect("/");
 
         }
@@ -152,9 +149,35 @@ namespace FoodMachine.Controllers.Payment
         [Route("/Payment/Cart/Delete/{id}")]
         public IActionResult Delete(int id)
         {
-          cartService.Delete(id);
-            return Redirect("/Admin/Products");
+            cartService.Delete(id);
+            return Redirect("/Payment/Cart");
         }
+        [HttpGet]
+        [Route("api/cart/count")]
+        public IActionResult GetCartCount()
+        {
+            int count = cartService.GetCartCount();
+            return Ok(new { count }); // returns the current cart count as JSON
+        }
+        [HttpPost]
+        [Route("api/cart/add/{id}")]
+
+        public IActionResult AddToCart(int id)
+        {
+            var product = productService.GetProductById(id);
+            if (product != null)
+            {
+                cartService.AddProduct(new Cart
+                {
+                    ProductId = product.Id,
+                    Quantity = 1
+                });
+            }
+
+            // Return the updated count
+            return Ok(new { count = cartService.GetCartCount() });
+        }
+
     }
 
 }

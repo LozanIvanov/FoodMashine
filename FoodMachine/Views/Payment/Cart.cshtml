@@ -41,7 +41,8 @@
                                         <i class="fa fa-minus"></i>
                                         </button>
                                     </div>
-                                    <input type="text" class="form-control form-control-sm bg-secondary text-center" value="1">
+                                    <input type="text" class="form-control form-control-sm bg-secondary text-center" value="@product.Quantity">
+
                                     <div class="input-group-btn">
                                         <button class="btn btn-sm btn-primary btn-plus"onclick="filterByQuantity()" >
                                             <i class="fa fa-plus"></i>
@@ -79,12 +80,12 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-3 pt-1">
                             <h6 class="font-weight-medium">Subtotal</h6>
-                            <h6 class="font-weight-medium" id ="SubTotal">$@Model.Products.Sum(x=>x.Price)</h6>
+                            <h6 class="font-weight-medium" id ="SubTotal">$@Model.Products.Sum(x=>x.Total)</h6>
                         </div>
                       
                              <div class="d-flex justify-content-between">
                             <h6 class="font-weight-medium">Shipping</h6>
-                            <h6 class="font-weight-medium">$10</h6>
+                        <h6 class="font-weight-medium">$@Model.Shipping</h6>
                         </div>
                         
                        
@@ -92,7 +93,7 @@
                     <div class="card-footer border-secondary bg-transparent">
                         <div class="d-flex justify-content-between mt-2">
                             <h5 class="font-weight-bold">Total</h5>
-                            <h5 class="font-weight-bold"id="TotalPrice">$@Model.Products.Sum(x=>x.Price)</h5>
+                        <h5 class="font-weight-bold" id="TotalPrice">$@(Model.Products.Sum(x => x.Total)+Model.Shipping)</h5>
                         </div>
                         <button  onclick="location.href='https://localhost:7068/Payment/Reservation/Create'" type="button" class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button>
                     </div>
