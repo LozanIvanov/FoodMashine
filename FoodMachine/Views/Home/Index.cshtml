@@ -22,18 +22,15 @@
             .catch(err => console.error(err));
     }
 
-    // Add product to cart
     function addToCart(productId) {
         fetch(`/api/cart/add/${productId}`, { method: 'POST' })
             .then(response => response.json())
             .then(data => {
-                // Update badge immediately
                 document.getElementById('cart-badge').innerText = data.count;
             })
             .catch(err => console.error(err));
     }
 
-    // Call once on page load
     updateCartCount();
 </script>
 
@@ -203,7 +200,7 @@
                                 </div>
                             </div>
                             <div class="card-footer d-flex justify-content-between bg-light border">
-                                <a href="/shop/details/@product.Id" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                                <a href="/payment/detail/@product.Id" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
                                 <a href="javascript:void(0)" onclick="addToCart(@product.Id)" class="btn btn-sm text-dark p-0">
                                     <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
                                 </a>
