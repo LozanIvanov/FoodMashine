@@ -18,11 +18,13 @@ namespace Food.Web.Controllers
         public IActionResult Index(int id)
         {
             var product = _productService.GetProductById(id);
-
             if (product == null)
             {
                 return NotFound();
             }
+
+            
+            var relatedProducts = _productService.GetRelatedProducts(id, 6);
 
             var model = new ProductViewModel
             {
@@ -31,9 +33,9 @@ namespace Food.Web.Controllers
                 Description = product.Discription,
                 Price = product.Price,
                 Quantity = product.Quantity,
-                MainImage = product.MainImage
+                MainImage = product.MainImage,
+                ListProducts = relatedProducts
             };
-
             return View("~/Views/Payment/Detail.cshtml", model);
         }
     }

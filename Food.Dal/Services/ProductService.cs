@@ -65,5 +65,14 @@ namespace Food.Dal.Services
             dbContext.Entry(cat).State = EntityState.Deleted;
             dbContext.SaveChanges();
         }
+        public List<Product> GetRelatedProducts(int currentProductId, int count = 6)
+        {
+            return this.dbContext.Products
+                                 .Where(p => p.Id != currentProductId) // exclude current
+                                 .OrderBy(p => Guid.NewGuid())         // randomize
+                                 .Take(count)
+                                 .ToList();
+        }
+
     }
 }
