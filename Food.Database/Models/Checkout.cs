@@ -22,5 +22,7 @@ namespace Food.Database.Models
         public DateTime? DateTime { get; set; }
         public int? CartItemId { get; set; }
         public Cart CartItem { get; set; }
+        public string PaymentMethod { get; set; }
+
     }
 }

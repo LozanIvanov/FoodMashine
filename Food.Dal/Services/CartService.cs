@@ -26,6 +26,14 @@ namespace Food.Dal.Services
             return this.dbContext.CartItems.Where(p => p.ProductId == id)
                 .FirstOrDefault();
         }
+        public List<Product> GetProducts()
+        {
+            // Join CartItems with Products to get full Product info
+            return dbContext.CartItems
+                .Include(c => c.Product) // include related Product
+                .Select(c => c.Product)
+                .ToList();
+        }
         public void AddProduct(Cart product)
         {
             
@@ -57,6 +65,13 @@ namespace Food.Dal.Services
         {
             return dbContext.CartItems.Sum(c => c.Quantity);
         }
+        public void ClearCart()
+        {
+            var allItems = dbContext.CartItems.ToList();
+            dbContext.CartItems.RemoveRange(allItems);
+            dbContext.SaveChanges();
+        }
+
     }
 }
 

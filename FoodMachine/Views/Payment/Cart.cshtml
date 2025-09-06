@@ -95,7 +95,7 @@
                             <h5 class="font-weight-bold">Total</h5>
                         <h5 class="font-weight-bold" id="TotalPrice">$@(Model.Products.Sum(x => x.Total)+Model.Shipping)</h5>
                         </div>
-                        <button  onclick="location.href='https://localhost:7068/Payment/Reservation/Create'" type="button" class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button>
+                        <button  onclick="location.href='/Payment/Checkout'" type="button" class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button>
                     </div>
                 </div>
             </div>

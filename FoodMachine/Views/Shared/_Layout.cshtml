@@ -126,7 +126,7 @@
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                                 <div class="dropdown-menu rounded-0 m-0">
                                     <a href="/Payment/Cart" class="dropdown-item">Shopping Cart</a>
-                                    <a href="/Payment/Reservation/Create" class="dropdown-item">Checkout</a>
+                                    <a href="/Payment/Checkout" class="dropdown-item">Checkout</a>
                                 </div>
                             </div>
                             <a href="contact.html" class="nav-item nav-link">Contact</a>
@@ -194,7 +194,7 @@
                     <a class="text-dark mb-2" asp-controller="Cart" asp-action="Index">
                         <i class="fa fa-angle-right mr-2"></i>Shopping Cart
                     </a>
-                    <a class="text-dark mb-2" href="/Payment/Reservation/Create">
+                    <a class="text-dark mb-2" href="/Payment/Checkout">
                         <i class="fa fa-angle-right mr-2" ></i>Checkout
                     </a>
                     <a class="text-dark" href="contact.html">
@@ -251,6 +251,11 @@
     <script src="/mail/contact.js"></script>
 
     <!-- Template Javascript -->
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
     <script src="/js/main.js"></script>
     <script>
         // Update cart badge
@@ -283,7 +288,7 @@
         // Call on page load
         document.addEventListener('DOMContentLoaded', updateCartCount);
     </script>
-
+    @RenderSection("Scripts", required: false)
 
 </body>
 

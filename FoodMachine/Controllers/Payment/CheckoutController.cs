@@ -1,100 +1,68 @@
 ﻿using Food.Dal.Models.Payment;
 using Food.Dal.Services;
-using Food.Database;
 using Food.Database.Models;
 using Microsoft.AspNetCore.Mvc;
-
-namespace FoodMachine.Controllers.Payment
+namespace Food.Web.Controllers.Payment
 {
+    [Route("Payment/Checkout")]
     public class CheckoutController : Controller
     {
-        private readonly CartService cartService;
-      
-        private readonly ApplicationDbContext _context;
-        private readonly CheckoutService checkoutService;
+        private readonly CartService _cartService;
+        private readonly CheckoutService _checkoutService;
 
-
-        public CheckoutController(CartService cartService, ApplicationDbContext context, CheckoutService checkoutService)
+        public CheckoutController(CartService cartService, CheckoutService checkoutService)
         {
-            this.cartService = cartService;
-           
-            this._context = context;
-            this.checkoutService = checkoutService;
+            _cartService = cartService;
+            _checkoutService = checkoutService;
         }
-        CheckoutViewModel model = new CheckoutViewModel();
-        [HttpGet]
-        [Route("/Payment/Checkout")]
+
+        [HttpGet("")]
         public IActionResult Index()
         {
-            return View("~/Views/Payment/Checkout.cshtml");
+            var model = new CheckoutViewModel
+            {
+                CartItemList = _cartService.GetAll(),
+                Products = _cartService.GetProducts()
+            };
+            return View("~/Views/Payment/Checkout.cshtml", model);
         }
 
-        [HttpGet]
-        [Route("/Payment/Checkout/Create")]
-        public IActionResult Create()
+        [HttpPost("")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Index(CheckoutViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                model.CartItemList = _cartService.GetAll();
+                model.Products = _cartService.GetProducts();
+                return View("~/Views/Payment/Checkout.cshtml", model);
+            } 
+            model.Checkouts.DateTime = DateTime.Now;
+            //_checkoutService.AddCheckout(model.Checkouts);
+            var entity = new Checkout
+            {
+                FirstName = model.Checkouts.FirstName,
+                LastName = model.Checkouts.LastName,
+                Email = model.Checkouts.Email,
+                MobilNumber = model.Checkouts.MobilNumber,
+                Address = model.Checkouts.Address,
+                City = model.Checkouts.City,
+                Country = model.Checkouts.Country,
+                State = model.Checkouts.State,
+                PaymentMethod = model.Checkouts.PaymentMethod,
+                DateTime = DateTime.Now
+            };
 
-            List<Product> w = new List<Product>();
-            List<Product> pro = _context.CartItems.Select(x => new Product
+            _checkoutService.AddCheckout(entity);
+
+            // ✅ Clear cart after successful checkout
+            _cartService.ClearCart();
+
+          /*  foreach (var item in model.CartItemList)
             {
-                Id = x.ProductId
-            }).ToList();
-            foreach (var pr in pro)
-            {
-                Product product = _context.Products.Where(x => x.Id == pr.Id).FirstOrDefault();
-                w.Add(product);
+                _cartService.Delete(item.ProductId);
             }
-
-            model.CartItemList = cartService.GetAll();
-        
-
-            model.Products = w;
-
-
-
-            return View("~/Views/Payment/Checkout/Create.cshtml", model);
-        }
-        [HttpPost]
-        [Route("/Payment/Checkout/Create")]
-        public IActionResult Create(CheckoutViewModel products)
-        {
-            List<Product> w = new List<Product>();
-
-            List<Product> pro = _context.CartItems.Select(x => new Product
-            {
-                Id = x.ProductId
-            }).ToList();
-            foreach (var pr in pro)
-            {
-                Product product = _context.Products.Where(x => x.Id == pr.Id).FirstOrDefault();
-                w.Add(product);
-            };
-            model.Products = w;
-
-            List<Product> me = new List<Product>();
-            List<Cart> sd = cartService.GetAll();
-
-
-
-            Checkout m = new Checkout()
-            {
-                Id = products.Checkouts.Id,
-                FirstName = products.Checkouts.FirstName,
-                LastName = products.Checkouts.LastName,
-                Email = products.Checkouts.Email,
-                MobilNumber = products.Checkouts.MobilNumber,
-                Address = products.Checkouts.Address,
-                City = products.Checkouts.City,
-                State = products.Checkouts.State,
-                DateTime = products.Checkouts.DateTime,
-                Country = products.Checkouts.Country,
-
-
-
-            };
-
-            checkoutService.AddCheckout(m);
-
+  |*/
             return Redirect("/Home");
         }
     }
