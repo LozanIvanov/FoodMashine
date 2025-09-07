@@ -1,109 +1,168 @@
 ﻿@model Food.Dal.Models.Admin.ProductEditViewModel;
- <!-- Page Header Start -->
-    <div class="container-fluid bg-secondary mb-5">
-        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
-            <h1 class="font-weight-semi-bold text-uppercase mb-3">Shopping Cart</h1>
-            <div class="d-inline-flex">
-                <p class="m-0"><a href="/Home">Home</a></p>
-                <p class="m-0 px-2">-</p>
-                <p class="m-0">Shopping Cart</p>
-            </div>
+<!-- Page Header Start -->
+<div class="container-fluid bg-secondary mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">Shopping Cart</h1>
+        <div class="d-inline-flex">
+            <p class="m-0"><a href="/Home">Home</a></p>
+            <p class="m-0 px-2">-</p>
+            <p class="m-0">Shopping Cart</p>
         </div>
     </div>
-    <!-- Page Header End -->
+</div>
+<!-- Page Header End -->
+<!-- Cart Start -->
+<div class="container-fluid pt-5">
+    <div class="row px-xl-5">
+        <div class="col-lg-8 table-responsive mb-5">
+            <table class="table table-bordered text-center mb-0">
+                <thead class="bg-secondary text-dark">
+                    <tr>
+                        <th>Products</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
 
-
-    <!-- Cart Start -->
-    <div class="container-fluid pt-5">
-        <div class="row px-xl-5">
-            <div class="col-lg-8 table-responsive mb-5">
-                <table class="table table-bordered text-center mb-0">
-                    <thead class="bg-secondary text-dark">
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    @foreach (var product in Model.Products)
+                    {
                         <tr>
-                            <th>Products</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Total</th>
-                            
-                            <th>Remove</th>
-                        </tr>
-                    </thead>
-                    <tbody class="align-middle">
-                        @foreach (var product in Model.Products)
-                        {
-                            <tr>
-                                <td class="align-middle"><img src="/img/products/@product.MainImages" value="@product.Name" alt="" style="width: 50px;">@product.Name </td>
-                            <td class="align-middle" Id="Price" value= "@product.Price">$@product.Price</td>
+                            <td class="align-middle"><img src="/img/products/@product.MainImages" value="@product.Name" alt="" style="width: 50px;">@product.Name </td>
+                            <td class="align-middle" Id="Price" value="@product.Price">$@product.Price</td>
                             <td class="align-middle" value="@product.Quantity">
                                 <div class="input-group quantity mx-auto" style="width: 100px;">
                                     <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-primary btn-minus" onclick="filterByQuantity()" >
-                                        <i class="fa fa-minus"></i>
+                                        <button type="button"
+                                                class="btn btn-sm btn-primary btn-minus"
+                                                data-id="@product.Id">
+                                            <i class="fa fa-minus"></i>
                                         </button>
                                     </div>
-                                    <input type="text" class="form-control form-control-sm bg-secondary text-center" value="@product.Quantity">
+
+                                    <input type="text"
+                                           class="form-control form-control-sm bg-secondary text-center quantity-input"
+                                           value="@product.Quantity"
+                                           data-id="@product.Id" readonly />
 
                                     <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-primary btn-plus"onclick="filterByQuantity()" >
+                                        <button type="button"
+                                                class="btn btn-sm btn-primary btn-plus"
+                                                data-id="@product.Id">
                                             <i class="fa fa-plus"></i>
                                         </button>
                                     </div>
                                 </div>
                             </td>
-                            <td class="align-middle" Id="Total" >$@product.Total</td>
-                            
+
+                            <td class="align-middle product-total" data-id="@product.Id">
+                                $@product.Total
+                            </td>
+
+
                             <td class="align-middle">
-                               
-                                <button onclick="location.href='https://localhost:7068/Payment/Cart/Delete/@product.Id'" type="button"   class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button>
-                               
-                                </td>
-                            </tr>
-                        }
-                          
-                       
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-lg-4">
-                <form class="mb-5" action="">
-                    <div class="input-group">
-                        <input type="text" class="form-control p-4" placeholder="Coupon Code">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary">Apply Coupon</button>
-                        </div>
+
+                                <button onclick="location.href='https://localhost:7068/Payment/Cart/Delete/@product.Id'" type="button" class="btn btn-sm btn-primary"><i class="fa fa-times"></i></button>
+
+                            </td>
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-4">
+            <form class="mb-5" action="">
+                <div class="input-group">
+                    <input type="text" class="form-control p-4" placeholder="Coupon Code">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary">Apply Coupon</button>
                     </div>
-                </form>
-                <div class="card border-secondary mb-5">
-                    <div class="card-header bg-secondary border-0">
-                        <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
+                </div>
+            </form>
+            <div class="card border-secondary mb-5">
+                <div class="card-header bg-secondary border-0">
+                    <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3 pt-1">
+                        <h6 class="font-weight-medium">Subtotal</h6>
+                        <h6 class="font-weight-medium" id="SubTotal">$@Model.Products.Sum(x => x.Total)</h6>
                     </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between mb-3 pt-1">
-                            <h6 class="font-weight-medium">Subtotal</h6>
-                            <h6 class="font-weight-medium" id ="SubTotal">$@Model.Products.Sum(x=>x.Total)</h6>
-                        </div>
-                      
-                             <div class="d-flex justify-content-between">
-                            <h6 class="font-weight-medium">Shipping</h6>
+
+                    <div class="d-flex justify-content-between">
+                        <h6 class="font-weight-medium">Shipping</h6>
                         <h6 class="font-weight-medium">$@Model.Shipping</h6>
-                        </div>
-                        
-                       
                     </div>
-                    <div class="card-footer border-secondary bg-transparent">
-                        <div class="d-flex justify-content-between mt-2">
-                            <h5 class="font-weight-bold">Total</h5>
-                        <h5 class="font-weight-bold" id="TotalPrice">$@(Model.Products.Sum(x => x.Total)+Model.Shipping)</h5>
-                        </div>
-                        <button  onclick="location.href='/Payment/Checkout'" type="button" class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button>
+
+
+                </div>
+                <div class="card-footer border-secondary bg-transparent">
+                    <div class="d-flex justify-content-between mt-2">
+                        <h5 class="font-weight-bold">Total</h5>
+                        <h5 class="font-weight-bold" id="TotalPrice">$@(Model.Products.Sum(x => x.Total) + Model.Shipping)</h5>
                     </div>
+                    <button onclick="location.href='/Payment/Checkout'" type="button" class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Cart End -->
+</div>
+<!-- Cart End -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Minus button
+        document.querySelectorAll(".btn-minus").forEach(btn => {
+            btn.addEventListener("click", function () {
+                const input = this.closest(".input-group").querySelector(".quantity-input");
+                let value = parseInt(input.value) || 1;
+                if (value > 1) {
+                    value--;
+                    input.value = value;
+                    updateCart(this.dataset.id, value);
+                }
+            });
+        });
 
+        // Plus button
+        document.querySelectorAll(".btn-plus").forEach(btn => {
+            btn.addEventListener("click", function () {
+                const input = this.closest(".input-group").querySelector(".quantity-input");
+                let value = parseInt(input.value) || 1;
+                value++;
+                input.value = value;
+                updateCart(this.dataset.id, value);
+            });
+        });
 
-    <!-- Footer Start -->
-   
-    <!-- Footer End -->
+        // AJAX call to backend
+        function updateCart(productId, quantity) {
+            fetch(`/api/cart/update/${productId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ quantity: quantity })
+            })
+            .then(res => res.json())
+            .then(data => {
+                // update row total
+                const input = document.querySelector(`.quantity-input[data-id="${productId}"]`);
+                const price = parseFloat(input.closest("tr").querySelector("#Price").getAttribute("value"));
+                const rowTotalCell = document.querySelector(`.product-total[data-id="${productId}"]`);
+                rowTotalCell.innerText = "$" + (price * quantity);
+
+                // update summary totals
+                document.getElementById("SubTotal").innerText = "$" + data.subtotal;
+                document.getElementById("TotalPrice").innerText = "$" + data.total;
+
+                // optional: update cart badge in header
+                const badge = document.getElementById("cart-badge");
+                if (badge) badge.innerText = data.count;
+            })
+            .catch(err => console.error("Cart update error:", err));
+        }
+    });
+</script>
+

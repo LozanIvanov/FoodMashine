@@ -5,6 +5,7 @@ using Food.Database;
 using Food.Database.Models;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FoodMachine.Controllers.Payment
 {
@@ -157,7 +158,7 @@ namespace FoodMachine.Controllers.Payment
         public IActionResult GetCartCount()
         {
             int count = cartService.GetCartCount();
-            return Ok(new { count }); // returns the current cart count as JSON
+            return Ok(new { count }); 
         }
         [HttpPost]
         [Route("api/cart/add/{id}")]
@@ -174,9 +175,29 @@ namespace FoodMachine.Controllers.Payment
                 });
             }
 
-            // Return the updated count
+            
             return Ok(new { count = cartService.GetCartCount() });
         }
+        [HttpPost("api/cart/update/{id}")]
+        public IActionResult UpdateQuantity(int id, [FromBody] CartViewModel model)
+        {
+            var item = cartService.GetProductById(id);
+            if (item != null)
+            {
+                item.Quantity = model.Quantity;
+                _context.CartItems.Update(item);
+                _context.SaveChanges();
+            }
+
+            // return updated totals
+            var products = _context.CartItems.Include(c => c.Product).ToList();
+            decimal subtotal = products.Sum(p => p.Product.Price * p.Quantity);
+            decimal shipping = products.Any() ? 10 : 0;
+            decimal total = subtotal + shipping;
+
+            return Ok(new { count = cartService.GetCartCount(), subtotal, total });
+        }
+
 
     }
 
