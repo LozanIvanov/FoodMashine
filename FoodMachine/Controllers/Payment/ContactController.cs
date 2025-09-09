@@ -1,12 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using FoodMachine.Models;
 
-namespace FoodMachine.Controllers.Payment
+namespace FoodMachine.Controllers
 {
     public class ContactController : Controller
     {
+        [HttpGet]
+        [Route("/Payment/Contact")]
         public IActionResult Index()
         {
-            return View("~/Views/Payment/Contact.cshtml");
+            // Create an empty model for the form
+            var model = new ContactMessage();
+            return View("~/Views/Payment/Contact.cshtml", model); // View: Views/Contact/Index.cshtml
         }
     }
 }

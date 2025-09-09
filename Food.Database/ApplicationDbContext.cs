@@ -1,4 +1,5 @@
 ﻿using Food.Database.Models;
+using FoodMachine.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,6 +13,7 @@ namespace Food.Database
     public class ApplicationDbContext : IdentityDbContext
     {
         public DbSet<Product> Products { get; set; }
+        public DbSet<ContactMessage> ContactMessages { get; set; }
 
         public DbSet<Cart> CartItems { get; set; }
         public DbSet<User> Users { get; set; }
