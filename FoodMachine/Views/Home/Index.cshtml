@@ -41,83 +41,76 @@
         <div class="col-lg-3 col-md-12">
             <!-- Price Start -->
             <div class="border-bottom mb-4 pb-4">
-                <h5 class="font-weight-semi-bold mb-4">Filter by price</h5>
+                <h5 class="font-weight-semi-bold mb-4">Filter by category</h5>
                 <form id="shop-form" method="GET">
-                    <div class="input-group">
-                        <input name="minPrice" class="form-control" placeholder="Min Price">
-                        <input name="maxPrice" class="form-control" placeholder="Max Price">
-                    </div>
+                    <!-- All Categories -->
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="radio" name="price-filter" value="0,0" onclick="filterByPrice()" class="custom-control-input" checked id="price-all">
-                        <label class="custom-control-label" for="price-all">All Price</label>
-                        <span class="badge border font-weight-normal">1000</span>
+                        <input type="checkbox" class="custom-control-input"
+                               name="categories" value="All" id="cat-all"
+                               @(Model.SelectedCategories == null || Model.SelectedCategories.Contains("All") ? "checked" : "")>
+                        <label class="custom-control-label" for="cat-all">All Categories</label>
+                        <span class="badge border font-weight-normal">@Model.CategoryCounts.Values.Sum()</span>
                     </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="radio" name="price-filter" value="0,100" onclick="filterByPrice()" class="custom-control-input" id="price-1">
-                        <label class="custom-control-label" for="price-1">$0 - $100</label>
-                        <span class="badge border font-weight-normal">150</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="radio" name="price-filter" value="100,200" onclick="filterByPrice()" class="custom-control-input" id="price-2">
-                        <label class="custom-control-label" for="price-2">$100 - $200</label>
-                        <span class="badge border font-weight-normal">295</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="radio" name="price-filter" value="200,300" onclick="filterByPrice()" class="custom-control-input" id="price-3">
-                        <label class="custom-control-label" for="price-3">$200 - $300</label>
-                        <span class="badge border font-weight-normal">246</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="radio" name="price-filter" value="300,400" onclick="filterByPrice()" class="custom-control-input" id="price-4">
-                        <label class="custom-control-label" for="price-4">$300 - $400</label>
-                        <span class="badge border font-weight-normal">145</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                        <input type="radio" name="price-filter" value="400,500" onclick="filterByPrice()" class="custom-control-input" id="price-5">
-                        <label class="custom-control-label" for="price-5">$400 - $500</label>
-                        <span class="badge border font-weight-normal">168</span>
-                    </div>
-                    <button class="btn btn-primary btn-block" type="submit">Search</button>
+
+                    <!-- Dynamic Categories -->
+                    @foreach (var cat in Model.CategoryCounts)
+                    {
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input"
+                                   name="categories" value="@cat.Key" id="cat-@cat.Key"
+                                   @(Model.SelectedCategories.Contains(cat.Key) ? "checked" : "")>
+                            <label class="custom-control-label" for="cat-@cat.Key">@cat.Key</label>
+                            <span class="badge border font-weight-normal">@cat.Value</span>
+                        </div>
+                    }
+
+                    <button class="btn btn-primary btn-block mt-2" type="submit">Apply</button>
                 </form>
             </div>
+
+
             <!-- Price End -->
-            <!-- Color Start -->
+            <!-- Category Start -->
+            <!-- Category Start -->
             <div class="border-bottom mb-4 pb-4">
                 <h5 class="font-weight-semi-bold mb-4">Filter by category</h5>
-                <form>
+                <form id="category-form" method="GET">
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" checked id="color-all">
-                        <label class="custom-control-label" for="price-all">All category</label>
+                        <input type="checkbox" class="custom-control-input" name="categories" value="All" id="cat-all">
+                        <label class="custom-control-label" for="cat-all">All category</label>
+
                         <span class="badge border font-weight-normal">1000</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="color-1">
-                        <label class="custom-control-label" for="color-1">Soup</label>
+                        <input type="checkbox" class="custom-control-input" name="categories" value="Soup" id="cat-1">
+                        <label class="custom-control-label" for="cat-1">Soup</label>
                         <span class="badge border font-weight-normal">150</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="color-2">
-                        <label class="custom-control-label" for="color-2">Salad</label>
+                        <input type="checkbox" class="custom-control-input" name="categories" value="Salad" id="cat-2">
+                        <label class="custom-control-label" for="cat-2">Salad</label>
                         <span class="badge border font-weight-normal">295</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="color-3">
-                        <label class="custom-control-label" for="color-3">Fish</label>
+                        <input type="checkbox" class="custom-control-input" name="categories" value="Fish" id="cat-3">
+                        <label class="custom-control-label" for="cat-3">Fish</label>
                         <span class="badge border font-weight-normal">246</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="color-4">
-                        <label class="custom-control-label" for="color-4">Desert</label>
+                        <input type="checkbox" class="custom-control-input" name="categories" value="Desert" id="cat-4">
+                        <label class="custom-control-label" for="cat-4">Desert</label>
                         <span class="badge border font-weight-normal">145</span>
                     </div>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                        <input type="checkbox" class="custom-control-input" id="color-5">
-                        <label class="custom-control-label" for="color-5">Green</label>
+                        <input type="checkbox" class="custom-control-input" name="categories" value="Green" id="cat-5">
+                        <label class="custom-control-label" for="cat-5">Green</label>
                         <span class="badge border font-weight-normal">168</span>
                     </div>
+                    <button class="btn btn-primary btn-block mt-2" type="submit">Apply</button>
                 </form>
             </div>
-            <!-- Color End -->
+            <!-- Category End -->
+            <!-- Category End -->
             <!-- Size Start -->
             <div class="mb-5">
                 <h5 class="font-weight-semi-bold mb-4">Filter by size</h5>

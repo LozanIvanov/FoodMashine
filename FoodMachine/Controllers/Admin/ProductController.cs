@@ -61,6 +61,7 @@ namespace FoodMachine.Controllers.Admin
                 Quantity = productModel.Quantity,
                 Price = productModel.Price,
                 MainImage = filePath,
+                Category=productModel.Category
                
             };
 
@@ -80,7 +81,8 @@ namespace FoodMachine.Controllers.Admin
                 Name = model.Name,
                 Description = model.Discription,
                 Price = model.Price,
-                MainImage = model.MainImage
+                MainImage = model.MainImage,
+                Category = model.Category
             };
 
             return View("~/Views/Admin/Products/Edit.cshtml", newProduct);
@@ -103,7 +105,9 @@ namespace FoodMachine.Controllers.Admin
                 Quantity = productModel.Quantity,
                 Price = productModel.Price,
                 MainImage = filePath,
-              
+                Category = productModel.Category
+
+
             };
 
             this.productService.UpdateProduct(id, product);

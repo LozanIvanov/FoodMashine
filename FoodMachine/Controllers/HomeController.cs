@@ -17,16 +17,20 @@ namespace FoodMachine.Controllers
             this.productService = productService;
         }
 
-        public IActionResult Index(int? page)
+        public IActionResult Index(int? page, List<string>? categories, decimal? minPrice, decimal? maxPrice, string? search)
         {
-            var result = new ProductViewModel()
+            var model = new ProductViewModel
             {
-                ListProducts = this.productService.GetProducts(page),
-                TotalPages = this.productService.GetTotalPages(),
-                CurrentPage = page != null ? page.Value : 1
+                ListProducts = productService.GetProducts(page, minPrice, maxPrice, search, categories),
+                TotalPages = productService.GetTotalPages(minPrice, maxPrice, search, categories),
+                CurrentPage = page ?? 1,
+                CategoryCounts = productService.GetCategoriesWithCounts(),
+                SelectedCategories = categories ?? new List<string>()
             };
-            return View("~/Views/Home/index.cshtml", result);
+
+            return View("~/Views/Home/index.cshtml", model);
         }
+
 
         public IActionResult Privacy()
         {

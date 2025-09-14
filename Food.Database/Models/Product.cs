@@ -18,6 +18,7 @@ namespace Food.Database.Models
         public string? MainImage { get; set; }
         
         public DateTime? Order { get; set; }
-     
+        public string Category { get; set; }
+
     }
 }
