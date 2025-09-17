@@ -2,6 +2,12 @@
 @{
     ViewData["Title"] = "Products Page";
 }
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success text-center">
+        @TempData["Success"]
+    </div>
+}
 
 
 <script>

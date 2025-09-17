@@ -55,14 +55,16 @@ namespace Food.Web.Controllers.Payment
 
             _checkoutService.AddCheckout(entity);
 
-            // ✅ Clear cart after successful checkout
+       
             _cartService.ClearCart();
 
-          /*  foreach (var item in model.CartItemList)
-            {
-                _cartService.Delete(item.ProductId);
-            }
-  |*/
+            TempData["Success"] = "🎉 Your order has been placed successfully!";
+
+            /*  foreach (var item in model.CartItemList)
+              {
+                  _cartService.Delete(item.ProductId);
+              }
+    |*/
             return Redirect("/Home");
         }
     }
