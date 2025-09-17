@@ -16,7 +16,9 @@ namespace Food.Database.Models
         [Column(TypeName = "decimal(15,2)")]
         public decimal Price { get; set; }
         public string? MainImage { get; set; }
-        
+        public double AverageRating { get; set; }   
+        public int RatingCount { get; set; }
+
         public DateTime? Order { get; set; }
         public string Category { get; set; }
 

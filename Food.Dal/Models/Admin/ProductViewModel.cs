@@ -25,6 +25,9 @@ namespace Food.Dal.Models.Admin
 
         // NEW: Stores currently selected categories
         public List<string> SelectedCategories { get; set; }
+        public double AverageRating { get; set; }  // e.g., 4.3
+        public int RatingCount { get; set; }      // e.g., 50 reviews
+
 
         public ProductViewModel()
         {

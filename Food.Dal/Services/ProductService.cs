@@ -138,6 +138,19 @@ namespace Food.Dal.Services
                 .Take(count)
                 .ToList();
         }
+        public void UpdateProductRating(Product product)
+        {
+            var currentProduct = dbContext.Products.FirstOrDefault(p => p.Id == product.Id);
+            if (currentProduct != null)
+            {
+                currentProduct.AverageRating = product.AverageRating;
+                currentProduct.RatingCount = product.RatingCount;
+
+                dbContext.Entry(currentProduct).State = EntityState.Modified;
+                dbContext.SaveChanges();
+            }
+        }
+
     }
 }
 
