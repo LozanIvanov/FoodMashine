@@ -25,7 +25,9 @@ namespace FoodMachine.Controllers
                 TotalPages = productService.GetTotalPages(minPrice, maxPrice, search, categories),
                 CurrentPage = page ?? 1,
                 CategoryCounts = productService.GetCategoriesWithCounts(),
-                SelectedCategories = categories ?? new List<string>()
+                SelectedCategories = categories ?? new List<string>(),
+                  MinPrice = minPrice,
+                MaxPrice = maxPrice
             };
 
             return View("~/Views/Home/index.cshtml", model);

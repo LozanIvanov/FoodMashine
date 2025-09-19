@@ -9,36 +9,56 @@
     </div>
 }
 
+    <script>
+        function filterByPrice() {
+            let value = document.querySelector('input[name="price-filter"]:checked').value;
+            document.querySelector('input[name="minPrice"]').value = value.split(',')[0];
+            document.querySelector('input[name="maxPrice"]').value = value.split(',')[1];
+            document.getElementById("shop-form").submit();
+        }
 
-<script>
-    function filterByPrice() {
-        let value = document.querySelector('input[name="price-filter"]:checked').value;
+        function updateCartCount() {
+            fetch('/api/cart/count')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('cart-badge').innerText = data.count;
+                })
+                .catch(err => console.error(err));
+        }
 
-        document.querySelector('input[name="minPrice"]').value = value.split(',')[0];
-        document.querySelector('input[name="maxPrice"]').value = value.split(',')[1];
+        function addToCart(productId) {
+            fetch(`/api/cart/add/${productId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('cart-badge').innerText = data.count;
+                })
+                .catch(err => console.error(err));
+        }
 
-        document.getElementById("shop-form").submit();
-    }
-     function updateCartCount() {
-        fetch('/api/cart/count')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('cart-badge').innerText = data.count;
-            })
-            .catch(err => console.error(err));
-    }
+        updateCartCount();
 
-    function addToCart(productId) {
-        fetch(`/api/cart/add/${productId}`, { method: 'POST' })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('cart-badge').innerText = data.count;
-            })
-            .catch(err => console.error(err));
-    }
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll('input[name="price-filter"]').forEach(function (radio) {
+                radio.addEventListener("change", function () {
+                    var parts = this.value.split(',');
+                    var min = parts[0] || "";
+                    var max = parts[1] || "";
 
-    updateCartCount();
-</script>
+                    if (min === "0" && max === "0") {
+                        document.getElementById("minPrice").value = "";
+                        document.getElementById("maxPrice").value = "";
+                    } else {
+                        document.getElementById("minPrice").value = min;
+                        document.getElementById("maxPrice").value = max;
+                    }
+
+                    document.getElementById("price-form").submit();
+                });
+            });
+        });
+    </script>
+}
+
 
 <!-- Shop Start -->
 <div class="container-fluid pt-5">
@@ -77,45 +97,48 @@
 
             <!-- Price End -->
             <!-- Category Start -->
-            <!-- Category Start -->
+            <!-- Price filter (replace existing price block) -->
             <div class="border-bottom mb-4 pb-4">
-                <h5 class="font-weight-semi-bold mb-4">Filter by category</h5>
-                <form id="category-form" method="GET">
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" name="categories" value="All" id="cat-all">
-                        <label class="custom-control-label" for="cat-all">All category</label>
+                <h5 class="font-weight-semi-bold mb-4">Filter by price</h5>
 
-                        <span class="badge border font-weight-normal">1000</span>
+                <!-- Price form: sends minPrice & maxPrice as query string -->
+                <form id="price-form" method="get" asp-controller="Home" asp-action="Index">
+                    <input type="hidden" name="minPrice" id="minPrice" value="@(Model.MinPrice?.ToString() ?? "")" />
+                    <input type="hidden" name="maxPrice" id="maxPrice" value="@(Model.MaxPrice?.ToString() ?? "")" />
+
+                    <div class="custom-control custom-radio mb-2">
+                        <input type="radio" class="custom-control-input" name="price-filter" id="price-all" value="0,0"
+                               @(Model.MinPrice == null && Model.MaxPrice == null ? "checked" : "")>
+                        <label class="custom-control-label" for="price-all">All Prices</label>
                     </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" name="categories" value="Soup" id="cat-1">
-                        <label class="custom-control-label" for="cat-1">Soup</label>
-                        <span class="badge border font-weight-normal">150</span>
+
+                    <div class="custom-control custom-radio mb-2">
+                        <input type="radio" class="custom-control-input" name="price-filter" id="price-1" value="0,100"
+                               @(Model.MinPrice == 0 && Model.MaxPrice == 100 ? "checked" : "")>
+                        <label class="custom-control-label" for="price-1">$0 - $100</label>
                     </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" name="categories" value="Salad" id="cat-2">
-                        <label class="custom-control-label" for="cat-2">Salad</label>
-                        <span class="badge border font-weight-normal">295</span>
+
+                    <div class="custom-control custom-radio mb-2">
+                        <input type="radio" class="custom-control-input" name="price-filter" id="price-2" value="100,200"
+                               @(Model.MinPrice == 100 && Model.MaxPrice == 200 ? "checked" : "")>
+                        <label class="custom-control-label" for="price-2">$100 - $200</label>
                     </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" name="categories" value="Fish" id="cat-3">
-                        <label class="custom-control-label" for="cat-3">Fish</label>
-                        <span class="badge border font-weight-normal">246</span>
+                    <div class="custom-control custom-radio mb-2">
+                        <input type="radio" class="custom-control-input" name="price-filter" id="price-2" value="100,200"
+                               @(Model.MinPrice == 200 && Model.MaxPrice == 300 ? "checked" : "")>
+                        <label class="custom-control-label" for="price-2">$200 - $300</label>
                     </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" name="categories" value="Desert" id="cat-4">
-                        <label class="custom-control-label" for="cat-4">Desert</label>
-                        <span class="badge border font-weight-normal">145</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                        <input type="checkbox" class="custom-control-input" name="categories" value="Green" id="cat-5">
-                        <label class="custom-control-label" for="cat-5">Green</label>
-                        <span class="badge border font-weight-normal">168</span>
-                    </div>
-                    <button class="btn btn-primary btn-block mt-2" type="submit">Apply</button>
+                   
+
+                    <!-- Add more ranges as needed -->
+
+                    <button type="submit" class="btn btn-primary btn-block mt-2">Apply</button>
                 </form>
             </div>
-            <!-- Category End -->
+
+            <!-- Put this script AFTER the HTML (bottom of view) or keep it anywhere but wrap in DOMContentLoaded -->
+          
+   
             <!-- Category End -->
             <!-- Size Start -->
             <div class="mb-5">
@@ -243,3 +266,5 @@
     </div>
 </div>
 <!-- Shop End -->
+     
+}
