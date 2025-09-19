@@ -29,6 +29,7 @@ namespace Food.Dal.Models.Admin
         public int RatingCount { get; set; }      
         public decimal? MinPrice { get; set; }
         public decimal? MaxPrice { get; set; }
+        public string? SortOrder { get; set; }
 
 
         public ProductViewModel()

@@ -1,4 +1,5 @@
 ﻿using Food.Database.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -19,7 +20,8 @@ namespace Food.Dal.Services
             decimal? minPrice = null,
             decimal? maxPrice = null,
             string? search = null,
-            List<string>? categories = null)
+            List<string>? categories = null,
+            string? sortOrder=null)
         {
             int page = pageNullable ?? 1;
             var query = dbContext.Products.AsQueryable();
@@ -37,6 +39,25 @@ namespace Food.Dal.Services
             // Filter by selected categories
             if (categories != null && categories.Count > 0 && !categories.Contains("All"))
                 query = query.Where(p => !string.IsNullOrEmpty(p.Category) && categories.Contains(p.Category));
+
+            switch (sortOrder)
+            {
+                case "Latest":
+                    query = query.OrderByDescending(p => p.Id);
+                    break;
+                case "PriceAsc":
+                    query = query.OrderBy(p => p.Price);
+                    break;
+                case "PriceDesc":
+                    query = query.OrderByDescending(p => p.Price);
+                    break;
+                case "BestRating":
+                    query = query.OrderByDescending(p => p.AverageRating);
+                    break;
+                default:
+                    query = query.OrderBy(p => p.Name);
+                    break;
+            }
 
             // Pagination
             return query
