@@ -45,7 +45,7 @@ $(function () {
                 complete: function () {
                     setTimeout(function () {
                         $this.prop("disabled", false);
-                    }, 1000);
+                    }, 2000);
                 }
             });
         },

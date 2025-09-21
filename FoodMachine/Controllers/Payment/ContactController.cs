@@ -9,9 +9,9 @@ namespace FoodMachine.Controllers
         [Route("/Payment/Contact")]
         public IActionResult Index()
         {
-            // Create an empty model for the form
+           
             var model = new ContactMessage();
-            return View("~/Views/Payment/Contact.cshtml", model); // View: Views/Contact/Index.cshtml
+            return View("~/Views/Payment/Contact.cshtml", model); 
         }
     }
 }
