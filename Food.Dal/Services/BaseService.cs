@@ -18,5 +18,9 @@ namespace Food.Dal.Services
             builder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             dbContext = new ApplicationDbContext(builder.Options);
         }
+        internal BaseService(ApplicationDbContext context)
+        {
+            dbContext = context; 
+        }
     }
 }

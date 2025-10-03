@@ -1,4 +1,5 @@
-﻿using Food.Database.Models;
+﻿using Food.Database;
+using Food.Database.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -12,8 +13,9 @@ namespace Food.Dal.Services
     public class CartService:BaseService
     {
         public CartService(IConfiguration configuration) : base(configuration) { }
+        internal CartService(ApplicationDbContext context) : base(context) { }
 
-       
+
         public List<Cart> GetAll()
         {
 
