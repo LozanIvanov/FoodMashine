@@ -151,11 +151,11 @@
                 const input = document.querySelector(`.quantity-input[data-id="${productId}"]`);
                 const price = parseFloat(input.closest("tr").querySelector("#Price").getAttribute("value"));
                 const rowTotalCell = document.querySelector(`.product-total[data-id="${productId}"]`);
-                rowTotalCell.innerText = "$" + (price * quantity);
+                rowTotalCell.innerText = "$" + (price * quantity).toFixed(2);
 
                 // update summary totals
-                document.getElementById("SubTotal").innerText = "$" + data.subtotal;
-                document.getElementById("TotalPrice").innerText = "$" + data.total;
+                document.getElementById("SubTotal").innerText = "$" + data.subtotal.toFixed(2);
+                document.getElementById("TotalPrice").innerText = "$" + data.total.toFixed(2);
 
                 // optional: update cart badge in header
                 const badge = document.getElementById("cart-badge");

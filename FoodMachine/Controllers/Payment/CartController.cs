@@ -195,7 +195,8 @@ namespace FoodMachine.Controllers.Payment
             decimal shipping = products.Any() ? 10 : 0;
             decimal total = subtotal + shipping;
 
-            return Ok(new { count = cartService.GetCartCount(), subtotal, total });
+            return Ok(new { count = cartService.GetCartCount(), 
+                subtotal, total });
         }
 
 
