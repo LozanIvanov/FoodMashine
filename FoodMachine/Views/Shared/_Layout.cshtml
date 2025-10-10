@@ -24,6 +24,20 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="/css/style.css" rel="stylesheet">
 </head>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const currentPath = window.location.pathname.toLowerCase();
+        if (currentPath.includes("/login") || currentPath.includes("/register")) {
+            document.querySelectorAll("a[href]").forEach(link => {
+                link.addEventListener("click", e => e.preventDefault());
+                link.style.pointerEvents = "none";
+                link.style.opacity = "0.6"; 
+                link.style.cursor = "not-allowed";
+            });
+        }
+    });
+</script>
+
 
 <body>
     <!-- Topbar Start -->
