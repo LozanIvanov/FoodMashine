@@ -276,7 +276,7 @@
     <script src="/js/main.js"></script>
     <script>
         // Update cart badge
-        function updateCartCount() {
+    /*    function updateCartCount() {
             const badge = document.getElementById('cart-badge');
             if (!badge) return;
 
@@ -313,9 +313,58 @@
                     setTimeout(() => alert.remove(), 500);
                 }, 1000);
             }
-        });
+        });*/
     </script>
     @RenderSection("Scripts", required: false)
+    <script>
+      /*  document.addEventListener("DOMContentLoaded", function () {
+            const cartBadge = document.getElementById("cart-badge");
+            const path = window.location.pathname.toLowerCase();
+
+            // If on login or register page, show 0
+            if (path.includes("/login") || path.includes("/register")) {
+                if (cartBadge) cartBadge.innerText = "0";
+                return; // stop here
+            }
+
+            // Otherwise, fetch real count from backend
+            fetch("/api/cart/count")
+                .then(res => res.json())
+                .then(data => {
+                    if (cartBadge) cartBadge.innerText = data.count || 0;
+                })
+                .catch(err => {
+                    console.error("Error fetching cart count:", err);
+                    if (cartBadge) cartBadge.innerText = "0";
+                });
+                });*/document.addEventListener("DOMContentLoaded", function () {
+            const cartBadge = document.getElementById("cart-badge");
+            const path = window.location.pathname.toLowerCase();
+
+            // If user is on login or register page, force 0 and disable cart link
+            if (path.includes("/login") || path.includes("/register")) {
+                if (cartBadge) {
+                    cartBadge.innerText = "0";
+                    cartBadge.style.pointerEvents = "none";
+                    cartBadge.style.opacity = "0.7";
+                }
+                const cartLink = document.querySelector('a[href="/Payment/Cart"]');
+                if (cartLink) cartLink.style.pointerEvents = "none";
+                return;
+            }
+
+            // Otherwise fetch the real cart count
+            fetch("/api/cart/count")
+                .then(res => res.json())
+                .then(data => {
+                    if (cartBadge) cartBadge.innerText = data?.count ?? 0;
+                })
+                .catch(err => {
+                    console.error("Error fetching cart count:", err);
+                    if (cartBadge) cartBadge.innerText = "0";
+                });
+        });
+    </script>
 
 </body>
 

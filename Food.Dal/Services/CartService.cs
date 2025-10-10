@@ -65,7 +65,10 @@ namespace Food.Dal.Services
         }
         public int GetCartCount()
         {
-            return dbContext.CartItems.Sum(c => c.Quantity);
+            /* return dbContext.CartItems.Sum(c => c.Quantity);*/
+            return dbContext.CartItems.Any()
+        ? dbContext.CartItems.Sum(c => c.Quantity)
+        : 0;
         }
         public void ClearCart()
         {
